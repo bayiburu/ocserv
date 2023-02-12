@@ -1,0 +1,100 @@
+#!/bin/sh
+
+function usage() {
+   cat << HEREDOC
+
+   Usage:
+      ocuser add [username]
+      ocuser list
+      ocuser remove [username]
+
+HEREDOC
+}
+
+function add_user() {
+    
+    if [ $# -ne 1 ]; then
+        usage
+    fi
+
+    M_uname=$1
+    M_path=/etc/ocserv/certs/users/$M_uname
+
+    if [ -d $M_path ]; then
+        read -p "The name '$M_uname' already exits, delete the original user? [y/N]: " M_is_replace
+        if [ $M_is_replace == "y" ]; then
+            rm -r $M_path
+        else
+            exit 0
+        fi
+    fi
+
+    mkdir -p $M_path
+    cd $M_path
+
+    certtool --generate-privkey --outfile user.key
+    cat << EOF > user.tmpl
+cn = "AnyConnect VPN User"
+uid = "$1"
+unit = "admins"
+expiration_days = 365
+signing_key
+tls_www_client
+EOF
+    certtool --generate-certificate \
+             --load-privkey user.key \
+             --load-ca-certificate /etc/ocserv/certs/ca.crt \
+             --load-ca-privkey /etc/ocserv/certs/ca.key \
+             --template user.tmpl \
+             --outfile user.crt
+    certtool --to-p12 \
+             --outder \
+             --load-privkey user.key \
+             --pkcs-cipher 3des-pkcs12 \
+             --load-certificate user.crt \
+             --outfile user.p12
+    rm user.tmpl
+
+    if [ -f $M_path/user.p12 ]; then
+        echo ""
+        echo "Add user successfully."
+        echo "User Name:        $M_uname"
+        echo "Certificate Path: $M_path/user.p123"
+    else
+        echo "Failed to add user" > &2
+        exit -1
+    fi
+
+}
+
+function list_users() {
+    echo "Not implemented."
+}
+
+function remove_user() {
+    echo "Not implemented."
+}
+
+function main() {
+
+    if [ $# -lt 1 ]; then
+        usage
+        exit 1
+    fi
+
+    case $1 in
+        add)
+            shift
+            add_user $@
+            ;;
+        list)
+            list_users
+            ;;
+        remove)
+            shift
+            remove_user $@
+            ;;
+    esac
+}
+
+main "$@"
