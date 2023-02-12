@@ -29,7 +29,6 @@ RUN buildDeps="curl \
 	&& make \
 	&& make install \
 	&& mkdir -p /etc/ocserv \
-	&& cp /usr/src/ocserv/doc/sample.config /etc/ocserv/ocserv.conf \
 	&& cd / \
 	&& rm -fr /usr/src/ocserv \
 	&& runDeps="$( \
@@ -44,7 +43,7 @@ RUN buildDeps="curl \
 
 COPY ocserv.conf /etc/ocserv/ocserv.conf
 COPY entrypoint.sh /entrypoint.sh
-COPY ocuser /ocuser
+COPY ocuser usr/bin/ocuser
 
 ENTRYPOINT ["/entrypoint.sh"]
 
