@@ -7,7 +7,7 @@ AnyConnect VPN Docker image based on alpine.
 Run `ocserv` in a new container:
 
 ```sh
-docker run --privileged -p 8443:443 -p 8443:443/udp -d --name ocserv joywek/ocserv
+docker run --privileged -p 6443:443 -p 6443:443/udp -d --name ocserv joywek/ocserv
 ```
 
 Generate the client certificates:
