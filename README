@@ -7,24 +7,49 @@ AnyConnect VPN Docker image based on alpine.
 Run `ocserv` in a new container:
 
 ```sh
-docker run --privileged -p 6443:443 -p 6443:443/udp -d --name ocserv joywek/ocserv
+docker volume create ocserv
+docker run --privileged \
+           --name ocserv \
+           --detach \
+           -v ocserv:/data \
+           -p 8443:443 \
+           bayiburu/ocserv:latest
 ```
 
-Generate the client certificates:
+#### Create and manage users
+
+In order to do that, we will use openconnect password (ocpasswd) utility. It allows the generation and handling of the password authentication used by OpenConnect VPN Server.
+
+**Adding a user**
+
+We can create users for our VPN by using the command below. For example we will create a user named "myusername".
 
 ```sh
-docker exec -it ocserv ocuser add sam
-
-Outputs:
-Add user successfully.
-User Name:        sam
-Certificate Path: /etc/ocserv/certs/users/sam/user.p12
+docker exec -it ocserv ocpasswd -c /data/ocpasswd myusername
 ```
 
-Copy the client certificate from docker to local:
+You will be asked to set a password for the user and to confirm it. We can use the same command to reset the password of the user.
+
+**Locking a User**
+
+Prevents the specified user from logging in by locking its password.
 
 ```sh
-docker cp ocserv:/etc/ocserv/certs/users/sam/user.p12 ./
+ocpasswd -c /etc/ocserv/ocpasswd -l username
 ```
 
-Import the `user.p12` file to you client app.
+**Unlocking a User**
+
+Re−enables login for the specified user by unlocking its password.
+
+```sh
+ocpasswd -c /etc/ocserv/ocpasswd -u username
+```
+
+**Deleting a User**
+
+Deletes the specified user from the VPN server.
+
+```sh
+ocpasswd -c /etc/ocserv/ocpasswd -d username
+```
