@@ -20,6 +20,11 @@ function setup_color() {
 }
 
 function system_config() {
+
+	if [ ! -f /data/ocserv.conf ]; then
+		cp /ocserv.conf /data/
+	fi
+
 	sysctl -w net.ipv4.ip_forward=1
 
 	# Enable NAT forwarding

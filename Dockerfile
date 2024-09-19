@@ -41,7 +41,7 @@ RUN set -x \
 	&& apk del .build-deps \
 	&& rm -rf /var/cache/apk/*
 
-COPY ocserv.conf /data/ocserv.conf
+COPY ocserv.conf /ocserv.conf
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
