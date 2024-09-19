@@ -5,7 +5,8 @@ MAINTAINER Dylan <dylan@haitu.io>
 ENV OCSERV_VERSION=1.3.0
 
 RUN set -x \
-    && buildDeps="curl \
+	&& apk add --update --no-cache --virtual .build-deps \
+		curl \
 		g++ \
 		gnutls-dev \
 		gpgme \
@@ -18,8 +19,7 @@ RUN set -x \
 		make \
 		readline-dev \
 		tar \
-		xz" \
-	&& apk add --update --virtual .build-deps $buildDeps \
+		xz \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OCSERV_VERSION.tar.xz" -o ocserv.tar.xz \
 	&& mkdir -p /usr/src/ocserv \
 	&& tar -xf ocserv.tar.xz -C /usr/src/ocserv --strip-components=1 \
@@ -37,7 +37,13 @@ RUN set -x \
 			| xargs -r apk info --installed \
 			| sort -u \
 		)" \
-	&& apk add --virtual .run-deps $runDeps gnutls-utils iptables libnl3 readline lz4-libs libseccomp \
+	&& apk add --virtual .run-deps $runDeps \
+		gnutls-utils \
+		iptables \
+		libnl3 \
+		readline \
+		lz4-libs \
+		libseccomp \
 	&& apk del .build-deps \
 	&& rm -rf /var/cache/apk/*
 
