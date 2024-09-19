@@ -37,7 +37,7 @@ RUN set -x \
 			| xargs -r apk info --installed \
 			| sort -u \
 		)" \
-	&& apk add --virtual .run-deps $runDeps gnutls-utils iptables libnl3 readline \
+	&& apk add --virtual .run-deps $runDeps gnutls-utils iptables libnl3 readline lz4-libs libseccomp \
 	&& apk del .build-deps \
 	&& rm -rf /var/cache/apk/*
 
