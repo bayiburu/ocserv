@@ -25,7 +25,7 @@ In order to do that, we will use openconnect password (ocpasswd) utility. It all
 We can create users for our VPN by using the command below. For example we will create a user named "myusername".
 
 ```sh
-docker exec -it ocserv ocpasswd -c /data/ocpasswd myusername
+docker exec -it ocserv ocpasswd -c /data/passwd myusername
 ```
 
 You will be asked to set a password for the user and to confirm it. We can use the same command to reset the password of the user.
@@ -35,7 +35,7 @@ You will be asked to set a password for the user and to confirm it. We can use t
 Prevents the specified user from logging in by locking its password.
 
 ```sh
-ocpasswd -c /etc/ocserv/ocpasswd -l username
+ocpasswd -c /etc/ocserv/passwd -l username
 ```
 
 **Unlocking a User**
@@ -43,7 +43,7 @@ ocpasswd -c /etc/ocserv/ocpasswd -l username
 Re−enables login for the specified user by unlocking its password.
 
 ```sh
-ocpasswd -c /etc/ocserv/ocpasswd -u username
+ocpasswd -c /etc/ocserv/passwd -u username
 ```
 
 **Deleting a User**
@@ -51,5 +51,5 @@ ocpasswd -c /etc/ocserv/ocpasswd -u username
 Deletes the specified user from the VPN server.
 
 ```sh
-ocpasswd -c /etc/ocserv/ocpasswd -d username
+ocpasswd -c /etc/ocserv/passwd -d username
 ```
