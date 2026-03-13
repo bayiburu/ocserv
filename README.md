@@ -9,8 +9,14 @@ This image provides a ready-to-run OpenConnect VPN server (ocserv) for Cisco Any
 ## Prerequisites
 
 - Docker 20.10 or later is installed on the host machine, with permission to run docker commands.
-- For using Let’s Encrypt certificates: Certificates have been issued via certbot on the host, located at `/etc/letsencrypt/live/`.
+- For using Let's Encrypt certificates: Certificates have been issued via certbot on the host, located at `/etc/letsencrypt/live/`.
 - If no trusted certificate is available: A self-signed certificate can be used (generation steps are provided below).
+
+## Environment Variables
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `DOMAIN` | The domain name for SSL certificates | - | ✅ Yes |
 
 ## Quick Start
 
@@ -33,7 +39,7 @@ docker run --privileged \
            -e DOMAIN=ocserv.example.com \
            -v ocserv:/data \
            -v /etc/letsencrypt:/etc/letsencrypt:ro \
-           -p 8443:443 \
+           -p 6443:443 \
            bayiburu/ocserv:latest
 ```
 
