@@ -21,7 +21,7 @@ Run `ocserv` in a new container:
 certbot certonly \
     --webroot \
     --webroot-path=/var/www/acme-challenge \
-    -d ocserv.haitu.io
+    -d ocserv.example.com
 
 # Create a persistent volume for ocserv data.
 docker volume create ocserv
@@ -30,13 +30,14 @@ docker volume create ocserv
 docker run --privileged \
            --name ocserv \
            --detach \
+           -e DOMAIN=ocserv.example.com \
            -v ocserv:/data \
            -v /etc/letsencrypt:/etc/letsencrypt:ro \
            -p 8443:443 \
            bayiburu/ocserv:latest
 ```
 
-#### CUser Management
+#### User Management
 
 In order to do that, we will use openconnect password (ocpasswd) utility. It allows the generation and handling of the password authentication used by OpenConnect VPN Server.
 

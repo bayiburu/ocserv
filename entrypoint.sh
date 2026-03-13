@@ -37,9 +37,21 @@ function system_config() {
 	chmod 600 /dev/net/tun
 }
 
+function setup_environment_variables() {
+	# Checks whether the env variables are set.
+	if [ -z "$DOMAIN" ]; then
+		echo "${RED}Error:${RESET} Please set the DOMAIN environment variable."
+		exit 1
+	fi
+
+	# Replace the env variables in the config file.
+	sed -i "s/your.custom.domain/${DOMAIN}/g" /data/ocserv.conf
+}
+
 function main() {
 	setup_color
 	system_config
+	setup_environment_variables
 	exec "$@"
 }
 
