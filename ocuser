@@ -59,9 +59,9 @@ EOF
         echo ""
         echo "Add user successfully."
         echo "User Name:        $M_uname"
-        echo "Certificate Path: $M_path/user.p123"
+        echo "Certificate Path: $M_path/user.p12"
     else
-        echo "Failed to add user" > &2
+        echo "Failed to add user" >&2
         exit -1
     fi
 
