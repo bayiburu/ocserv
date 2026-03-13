@@ -31,7 +31,7 @@ docker run --privileged \
            --name ocserv \
            --detach \
            -v ocserv:/data \
-           -v /etc/letsencrypt/live:/etc/letsencrypt/live:ro \
+           -v /etc/letsencrypt:/etc/letsencrypt:ro \
            -p 8443:443 \
            bayiburu/ocserv:latest
 ```
@@ -57,7 +57,7 @@ You will be asked to set a password for the user and to confirm it. We can use t
 Prevents the specified user from logging in by locking its password.
 
 ```sh
-ocpasswd -c /data/passwd -l username
+docker exec -it ocserv ocpasswd -c /data/passwd -l username
 ```
 
 **Unlocking a User**
@@ -65,7 +65,7 @@ ocpasswd -c /data/passwd -l username
 Re−enables login for the specified user by unlocking its password.
 
 ```sh
-ocpasswd -c /data/passwd -u username
+docker exec -it ocserv ocpasswd -c /data/passwd -u username
 ```
 
 **Deleting a User**
@@ -73,5 +73,5 @@ ocpasswd -c /data/passwd -u username
 Deletes the specified user from the VPN server.
 
 ```sh
-ocpasswd -c /data/passwd -d username
+docker exec -it ocserv ocpasswd -c /data/passwd -d username
 ```
