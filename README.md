@@ -1,24 +1,46 @@
 # docker-ocserv
 
-AnyConnect VPN Docker image based on alpine.
+Lightweight AnyConnect VPN Docker image based on Alpine Linux, focused on security and ease of use.
 
-## How to use this image
+## Overview
+
+This image provides a ready-to-run OpenConnect VPN server (ocserv) for Cisco AnyConnect clients, with persistent configuration, user management, and TLS support.
+
+## Prerequisites
+
+- Docker 20.10 or later is installed on the host machine, with permission to run docker commands.
+- For using Let’s Encrypt certificates: Certificates have been issued via certbot on the host, located at `/etc/letsencrypt/live/`.
+- If no trusted certificate is available: A self-signed certificate can be used (generation steps are provided below).
+
+## Quick Start
 
 Run `ocserv` in a new container:
 
 ```sh
+# Create SSL certificates.
+certbot certonly \
+    --webroot \
+    --webroot-path=/var/www/acme-challenge \
+    -d ocserv.haitu.io
+
+# Create a persistent volume for ocserv data.
 docker volume create ocserv
+
+# Run the ocserv container.
 docker run --privileged \
            --name ocserv \
            --detach \
            -v ocserv:/data \
+           -v /etc/letsencrypt/live:/etc/letsencrypt/live:ro \
            -p 8443:443 \
            bayiburu/ocserv:latest
 ```
 
-#### Create and manage users
+#### CUser Management
 
 In order to do that, we will use openconnect password (ocpasswd) utility. It allows the generation and handling of the password authentication used by OpenConnect VPN Server.
+
+NOTE: All commands are run on the host machine.
 
 **Adding a user**
 
@@ -35,7 +57,7 @@ You will be asked to set a password for the user and to confirm it. We can use t
 Prevents the specified user from logging in by locking its password.
 
 ```sh
-ocpasswd -c /etc/ocserv/passwd -l username
+ocpasswd -c /data/passwd -l username
 ```
 
 **Unlocking a User**
@@ -43,7 +65,7 @@ ocpasswd -c /etc/ocserv/passwd -l username
 Re−enables login for the specified user by unlocking its password.
 
 ```sh
-ocpasswd -c /etc/ocserv/passwd -u username
+ocpasswd -c /data/passwd -u username
 ```
 
 **Deleting a User**
@@ -51,5 +73,5 @@ ocpasswd -c /etc/ocserv/passwd -u username
 Deletes the specified user from the VPN server.
 
 ```sh
-ocpasswd -c /etc/ocserv/passwd -d username
+ocpasswd -c /data/passwd -d username
 ```

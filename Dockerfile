@@ -2,7 +2,7 @@ FROM alpine:3.20
 
 MAINTAINER Dylan <dylan@haitu.io>
 
-ENV OCSERV_VERSION=1.3.0
+ENV OCSERV_VERSION=1.4.1
 
 RUN set -x \
 	&& apk add --update --no-cache --virtual .build-deps \
